@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User, Group
+from system.models import User
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer
-
+from .serializers import UserSerializer
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -9,11 +10,15 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+    def list(self, request):
+        pass
+
+    def create(self, request):
+        return Response({"detail": "Method \"POST\" not allowed."}, status=405)
+
+    def retrieve(self, request, pk=None):
+        pass
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer

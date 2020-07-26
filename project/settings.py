@@ -31,18 +31,27 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANDO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
+LOCAL_APPS = [
     # REST FRAMEWORK
     'rest_framework',
     'rest_registration',
+    'system',
 ]
+
+
+# Rgistro de todas las apliaciones necesarias para el proyecto EMA en DJANGO
+
+
+INSTALLED_APPS = DJANDO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,7 +70,15 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
-    ]
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
 REST_REGISTRATION = {
@@ -79,8 +96,8 @@ JWT_AUTH = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(hours=1),
-    "USER_ID_FIELD": "username",
-    'USER_ID_CLAIM': 'username',
+    "USER_ID_FIELD": "enrollment",
+    'USER_ID_CLAIM': 'enrollment',
 }
 
 # ---------------------------------------------------------------------
@@ -116,6 +133,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'system.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
